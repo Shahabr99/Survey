@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash
+from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from surveys import satisfaction_survey as survey
 
@@ -12,10 +12,13 @@ answers = []
 
 @app.route('/answer', methods=['POST'])
 def store_answer():
-  respond = request.form['shopped-before']
+  
+  respond = request.form['answer']
   answers.append(respond)
+  session['responses'] = answers
 
   if (len(answers) == len(survey.questions)):
+    
     return redirect('/complete')
   else:
     return redirect(f'/question/{len(answers)}')
@@ -24,7 +27,6 @@ def store_answer():
 
 @app.route('/')
 def go_home():
-
   title = survey.title
   instructions = survey.instructions
 
@@ -34,14 +36,15 @@ def go_home():
 @app.route('/question/<int:number>')
 def show_question(number):
   
-  question = survey.questions[number]
 
-  if (len(answers) != number):
+  if len(answers) != number:
     flash(f'Invalid question {number}') 
-    return redirect('/question/0')  
+    return redirect(f'/question/{len(answers)}')  
   else:
+    question = survey.questions[number]
     return render_template('question.html', question=question)
 
 @app.route('/complete')
 def completion():
+  
   return render_template('complete.html')

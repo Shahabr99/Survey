@@ -2,17 +2,13 @@
 get_flashed_messages(with_categories=true) %} {% if messages %} {% for
 category,message in messages %}
 <p class="'{{category}}">{{message}}</p>
+{% endfor %}{% endif %} {% endwith %}
 <h3>{{question.question}}</h3>
 
 <form action="/answer" method="POST">
-  <label
-    >Yes:
-    <input type="checkbox" name="shopped-before" />
-  </label>
-  <label
-    >No:
-    <input type="checkbox" name="shopped-before" />
-  </label>
+  {% for choice in question.choices %}
+  <p><input type="radio" name="answer" value="{{choice}}" />{{choice}}</p>
+  {% endfor %}
   <button>submit</button>
 </form>
 {% endblock question0 %}
