@@ -5,7 +5,7 @@ category,message in messages %}
 {% endfor %}{% endif %} {% endwith %}
 <h3>{{question.question}}</h3>
 
-<form action="/answer" method="POST">
+<form action="/respond" method="POST">
   {% for choice in question.choices %}
   <p><input type="radio" name="answer" value="{{choice}}" />{{choice}}</p>
   {% endfor %}
